@@ -1,9 +1,12 @@
 import { NativeEventEmitter } from "react-native";
+import { Buffer } from "buffer";
+
 export interface PrinterOptions {
     beep?: boolean;
     cut?: boolean;
     tailingLine?: boolean;
     encoding?: string;
+    additionalController?: Record<string, Buffer>
 }
 export interface IUSBPrinter {
     device_name: string;

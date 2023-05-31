@@ -50,7 +50,7 @@ var controller = {
     "</L>": l_end_bytes,
     "<R>": r_start_bytes,
     "</R>": r_end_bytes,
-    "<O>": Buffer.from([27,33,16]),
+    "<O>": Buffer.from([27, 33, 16]),
     "</O>": Buffer.from([]),
 };
 var default_options = {
@@ -58,6 +58,7 @@ var default_options = {
     cut: true,
     tailingLine: true,
     encoding: "UTF8",
+    additionalController: {}
 };
 export function exchange_text(text, options) {
     var m_options = options || default_options;
@@ -65,6 +66,7 @@ export function exchange_text(text, options) {
     bytes.concat(init_printer_bytes);
     bytes.concat(default_space_bytes);
     var temp = "";
+    var controllers = { ...controller, ...m_options.additionalController }
     for (var i = 0; i < text.length; i++) {
         var ch = text[i];
         switch (ch) {
@@ -72,9 +74,9 @@ export function exchange_text(text, options) {
                 bytes.concat(iconv.encode(temp, m_options.encoding));
                 temp = "";
                 // add bytes for changing font and justifying text
-                for (var tag in controller) {
+                for (var tag in controllers) {
                     if (text.substring(i, i + tag.length) === tag) {
-                        bytes.concat(controller[tag]);
+                        bytes.concat(controllers[tag]);
                         i += tag.length - 1;
                     }
                 }
